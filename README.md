@@ -6,23 +6,17 @@ The repository intentionally excludes figure-generation code and large raw exter
 
 ## Repository Layout
 
-```text
-.
-??? config.py                         # Central paths and benchmark settings
-??? run_dream4_full.py                # Sequential DREAM4 full-data benchmark
-??? run_dream4_full_task.py           # One DREAM4 full-data network-seed task
-??? combine_dream4_full_results.py    # Merge DREAM4 full-data array outputs
-??? run_dream4_partitioned.py         # DREAM4 60:20:20 edge-split benchmark
-??? run_beeline_garnet_protocol.py    # BEELINE hESC balanced pair protocol
-??? data/
-?   ??? download_dream4.py            # Prepare DREAM4 raw files locally
-?   ??? partition_dream4.py           # Generate DREAM4 partitioned split
-?   ??? DREAM4/partitioned/           # Study-specific DREAM4 partitioned inputs
-??? evaluation/                       # AUROC, AUPRC, and early precision metrics
-??? methods/                          # Method wrappers used in the benchmarks
-??? results/                          # Final benchmark result tables
-??? slurm/                            # SLURM scripts for running benchmarks
-```
+- `config.py`: central paths and benchmark settings.
+- `run_dream4_full.py`: sequential DREAM4 full-data benchmark.
+- `run_dream4_full_task.py`: one DREAM4 full-data network-seed task for array jobs.
+- `combine_dream4_full_results.py`: merge DREAM4 full-data array outputs.
+- `run_dream4_partitioned.py`: DREAM4 60:20:20 edge-split benchmark.
+- `run_beeline_garnet_protocol.py`: BEELINE hESC balanced pair protocol.
+- `data/`: DREAM4 preparation scripts and study-specific partitioned inputs.
+- `evaluation/`: AUROC, AUPRC, and early precision metrics.
+- `methods/`: method wrappers used in the benchmarks.
+- `results/`: final benchmark result tables.
+- `slurm/`: SLURM scripts for running benchmarks.
 
 ## Benchmark Protocols
 
