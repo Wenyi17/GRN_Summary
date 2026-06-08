@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 """
-BEELINE hESC benchmark —  common evaluation protocol.
+BEELINE hESC benchmark — GARNET evaluation protocol.
 
-Same dataset construction and evaluation as Common/run_extra_baselines.py:
+Same dataset construction and evaluation as GARNET/run_extra_baselines.py:
   - Gene universe: expr ∩ gold genes (capped at 5000)
   - Balanced 1:1 pos/neg pairs
   - 10-fold StratifiedKFold on pairs
   - sklearn roc_auc_score / average_precision_score
 
+Usage:
+  python run_beeline_garnet_protocol.py --methods GENIE3,GRNBoost2 --output results/bee_gp_cpu1.tsv
+  python run_beeline_garnet_protocol.py --methods iLSGRN,TIGRESS --output results/bee_gp_cpu2.tsv
+  python run_beeline_garnet_protocol.py --methods DeepSEM,DeepTGI,GNNLink,LINGER --output results/bee_gp_gpu.tsv
 """
 import argparse, sys, time, warnings
 from pathlib import Path
@@ -21,14 +25,12 @@ from joblib import Parallel, delayed
 warnings.filterwarnings("ignore")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from config import BEELINE_EXPR, BEELINE_GOLD
 
 SEED = 42
 N_FOLDS = 10
 MAX_GENES = 5000
 MAX_POS_PAIRS = 30000
-
-BEELINE_EXPR = "/nas/longleaf/home/leyudai/Beeline/BEELINE-data/inputs/scRNA-Seq/hESC/ExpressionData.csv"
-BEELINE_GOLD = "/nas/longleaf/home/leyudai/Beeline/Networks/human/hESC-ChIP-seq-network.csv"
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 UNSUPERVISED = {"GENIE3", "GRNBoost2", "iLSGRN", "TIGRESS"}
@@ -36,7 +38,7 @@ SUPERVISED = {"DeepSEM", "DeepTGI", "GNNLink", "LINGER"}
 
 
 def load_dataset():
-    """Identical to Common/run_extra_baselines.py load_dataset()."""
+    """Identical to GARNET/run_extra_baselines.py load_dataset()."""
     print("  Loading data...", flush=True)
     expr_df = pd.read_csv(BEELINE_EXPR, index_col=0)
     gold = pd.read_csv(BEELINE_GOLD)
@@ -269,10 +271,10 @@ def run_supervised_fold(method_name, data, train_pairs, train_labels, test_pairs
 
 
 # ────────────────────────────────────────────────────────────
-# Evaluation (identical to Common protocol)
+# Evaluation (identical to GARNET protocol)
 # ────────────────────────────────────────────────────────────
 def eval_unsupervised(method_name, score_mat, data):
-    """Evaluate unsupervised method using Common's protocol."""
+    """Evaluate unsupervised method using GARNET's protocol."""
     pairs, labels = data["pairs"], data["labels"]
     tf_idx = data["tf_idx"]
     tf_pos = {int(v): i for i, v in enumerate(tf_idx)}
@@ -290,7 +292,7 @@ def eval_unsupervised(method_name, score_mat, data):
 
 
 def eval_supervised(method_name, data):
-    """Evaluate supervised method per fold using Common's protocol."""
+    """Evaluate supervised method per fold using GARNET's protocol."""
     pairs, labels = data["pairs"], data["labels"]
     skf = StratifiedKFold(n_splits=N_FOLDS, shuffle=True, random_state=SEED)
     rows = []
@@ -329,7 +331,7 @@ def main():
     torch.manual_seed(SEED)
 
     print("=" * 60, flush=True)
-    print(f"  BEELINE hESC — Common protocol", flush=True)
+    print(f"  BEELINE hESC — GARNET protocol", flush=True)
     print(f"  Methods: {methods}", flush=True)
     print(f"  {N_FOLDS}-fold StratifiedKFold, balanced 1:1 pairs", flush=True)
     print(f"  Device: {DEVICE}", flush=True)

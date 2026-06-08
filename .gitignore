@@ -1,0 +1,24 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Runtime logs and cluster outputs
+*.out
+*.err
+*.log
+
+# Intermediate task outputs
+results/dream4_full_tasks/
+
+# Large external/raw data directories
+external/
+external_data/
+Beeline/
+data/DREAM4/net*_expression.tsv
+data/DREAM4/net*_goldstandard.tsv
+
+# Local environments
+.env
+.venv/
+venv/
+env/
